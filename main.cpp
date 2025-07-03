@@ -7,6 +7,7 @@
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
 int main() {
+    
     Display *d = XOpenDisplay(NULL);
     int s = DefaultScreen(d);
     

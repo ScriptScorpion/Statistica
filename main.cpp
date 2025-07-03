@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <sys/utsname.h>
+#include <sys/sysinfo.h>
 int main() {
     Display *d = XOpenDisplay(NULL);
     int s = DefaultScreen(d);
@@ -48,20 +49,24 @@ int main() {
     XEvent e;
     
     struct utsname data;
-    if (uname(&data) == 0) {
+    struct sysinfo info;
+    if (uname(&data) == 0 && sysinfo(&info) == 0) {
         std::string os = "OS: " + std::string(data.sysname);
         std::string hostname = "Hostname: " + std::string(data.nodename);
-        std::string arch = "Cpu Architecture: " + std::string(data.machine); 
+        std::string arch = "Cpu Architecture: " + std::string(data.machine);
+        std::string ram = "Total Ram(Mib): " + std::to_string(info.totalram / 1048576); // info.totalram will be by default in bytes
+        std::string freeram = "Free Ram(Mib): " + std::to_string(info.freeram /1048576);
         while (true) {
             XNextEvent(d, &e);
             int rect_x = (screen_width - 40) / 2;
             int rect_y = (screen_height - 25) / 2;
-            XDrawString(d, w, gc, rect_x, rect_y - 420, "Statistica", 10);
+            XDrawString(d, w, gc, rect_x - 45, rect_y - 430, "Statistica", 10);
 
             XDrawString(d, w, gc, rect_x - 750, rect_y - 350, os.c_str(), os.size());
             XDrawString(d, w, gc, rect_x - 750, rect_y - 300, hostname.c_str(), hostname.size());
             XDrawString(d, w, gc, rect_x - 750, rect_y - 250, arch.c_str(), arch.size());
-
+            XDrawString(d, w, gc, rect_x - 750, rect_y - 200, ram.c_str(), ram.size());
+            XDrawString(d, w, gc, rect_x - 750, rect_y - 150, freeram.c_str(), freeram.size());
         }
     }
     XCloseDisplay(d);

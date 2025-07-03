@@ -2,7 +2,6 @@
 #include <X11/Xutil.h>
 #include <unistd.h>
 #include <cstring>
-#include <vector>
 #include <string>
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
